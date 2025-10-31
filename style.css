@@ -1,100 +1,165 @@
+/* ---------------------------------
+   1. Base y Tipografía
+--------------------------------- */
 body {
-    font-family: sans-serif;
-    background-color: #f4f7f6;
+    /* Aplicamos Poppins */
+    font-family: 'Poppins', sans-serif; 
+    background-color: #f0f4f8; /* Fondo gris muy suave (cielo) */
     color: #333;
     margin: 0;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 100vh;
 }
 
 .container {
-    max-width: 900px; /* Aumentamos el ancho para las 3 columnas */
+    max-width: 1000px; 
     width: 100%;
     background-color: #fff;
     padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    /* Sombra más suave y moderna */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
     text-align: center;
+    margin-top: 20px;
 }
 
 h1 {
-    color: #4A90E2; /* Azul atractivo */
+    color: #8A2BE2; /* Morado Vibrante para el acento */
+    font-weight: 700;
 }
 
 p {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     color: #666;
 }
 
 textarea {
     width: 95%;
-    height: 100px;
+    height: 120px;
     padding: 15px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: 1px solid #dcdfe4;
+    border-radius: 10px;
     font-size: 16px;
     resize: vertical;
+    transition: border-color 0.3s;
 }
 
+textarea:focus {
+    border-color: #8A2BE2;
+    outline: none;
+}
+
+/* Estilo para Botones Principales */
 button {
-    background-color: #4A90E2;
+    background-color: #8A2BE2; /* Morado */
     color: white;
-    padding: 12px 25px;
+    padding: 14px 30px;
     border: none;
-    border-radius: 8px;
+    border-radius: 30px; /* Botón tipo "píldora" */
     cursor: pointer;
-    font-size: 18px;
-    transition: background-color 0.3s;
-    margin-bottom: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(138, 43, 226, 0.3);
 }
 
 button:hover {
-    background-color: #357ABD;
+    background-color: #721CC6;
+    box-shadow: 0 6px 15px rgba(138, 43, 226, 0.4);
 }
 
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ---------------------------------
+   2. Animación de Carga
+--------------------------------- */
 .loading {
     margin: 20px 0;
-    color: #4A90E2;
-    font-weight: bold;
+    color: #8A2BE2;
+    font-weight: 600;
+    /* Estilo del spinner */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Estilos para el nuevo layout de 3 columnas (Similar a Metricool) */
+.loading::before {
+    content: '';
+    width: 15px;
+    height: 15px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #8A2BE2;
+    border-radius: 50%;
+    margin-right: 10px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* ---------------------------------
+   3. Contenedor de Resultados (Cards)
+--------------------------------- */
 .results-container {
-    margin-top: 30px;
-    padding: 20px;
-    border: 2px solid #D9E4F5;
-    border-radius: 8px;
+    margin-top: 40px;
+    padding: 30px;
+    border-radius: 12px;
+    background-color: #ffffff; 
+    border: 1px solid #e0e4e8;
+    text-align: left;
+}
+
+.results-container h2 {
     text-align: center;
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 25px;
 }
 
 .hashtag-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columnas de igual ancho */
-    gap: 15px; /* Espacio entre columnas */
-    margin-top: 20px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px; 
+    margin-bottom: 30px;
 }
 
 .hashtag-column {
-    background-color: #ffffff; /* Fondo blanco */
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #eee;
+    background-color: #f9fbfd; /* Fondo muy ligero para contraste */
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #e9eef2;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    align-items: flex-start; /* Alineamos a la izquierda */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .hashtag-column h3 {
-    color: #4A90E2;
+    color: #444;
     margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.1em;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
 }
+
+/* Estilo para los diferentes encabezados */
+.hashtag-column:nth-child(1) h3 { color: #FF4500; } /* Populares (Naranja) */
+.hashtag-column:nth-child(2) h3 { color: #1E90FF; } /* Medios (Azul) */
+.hashtag-column:nth-child(3) h3 { color: #32CD32; } /* Nicho (Verde) */
+
 
 .hashtag-output {
     min-height: 150px; 
@@ -102,36 +167,54 @@ button:hover {
     text-align: left;
     white-space: pre-wrap;
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.8; /* Más espacio entre hashtags */
     color: #222;
 }
 
 .copy-small {
-    background-color: #79a6d2;
-    padding: 6px 15px;
+    background-color: #4CAF50; /* Botón Copiar en Verde */
+    padding: 8px 18px;
     font-size: 14px;
-    margin-top: 10px;
+    margin-top: auto; /* Empuja el botón hacia abajo */
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
 }
 
 .copy-small:hover {
-    background-color: #5d8abf;
+    background-color: #43A047;
 }
 
+/* Botón de Copiar Todos */
+#copy-all-button {
+    background-color: #FF4500;
+    margin-top: 15px;
+}
+#copy-all-button:hover {
+    background-color: #D32F2F;
+}
+
+/* Línea divisoria más sutil */
 hr {
     border: 0;
-    border-top: 1px solid #eee;
-    margin: 20px 0;
+    border-top: 1px solid #f0f4f8; 
+    margin: 30px 0;
 }
 
-/* Adaptación para móviles */
-@media (max-width: 768px) {
+/* ---------------------------------
+   4. Adaptación a Móviles
+--------------------------------- */
+@media (max-width: 850px) {
     .hashtag-grid {
         grid-template-columns: 1fr; /* 1 columna en móviles */
+    }
+    .container {
+        padding: 20px;
     }
 }
 
 footer {
-    margin-top: 40px;
+    margin-top: 30px;
+    padding-bottom: 20px;
     font-size: 12px;
     color: #999;
 }
