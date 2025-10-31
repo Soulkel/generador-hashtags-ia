@@ -1,8 +1,8 @@
-// ** CONFIGURACIÓN DE LA API **
-// ******* ¡IMPORTANTE! *******
-// ¡REEMPLAZA ESTA CLAVE CON LA TUYA DE GEMINI!
-const GEMINI_API_KEY = "AIzaSyBElPMaw8cq_-7XjXA4SSZb4829VisEVlI"; 
-const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+// script.js (¡IMPORTANTE! Este código llama a la Netlify Function)
+
+// ** CONFIGURACIÓN DEL ENDPOINT SEGURO **
+// La clave de API ya no está aquí. Se encuentra oculta en Netlify.
+const NETLIFY_FUNCTION_URL = '/api/generate'; 
 
 
 async function generateHashtags() {
@@ -10,7 +10,7 @@ async function generateHashtags() {
     const loadingDiv = document.getElementById('loading');
     const resultsDiv = document.getElementById('results');
     const generateButton = document.getElementById('generate-button');
-
+    
     if (!description.trim()) {
         alert("Por favor, introduce una descripción para tu Reel.");
         return;
@@ -21,36 +21,27 @@ async function generateHashtags() {
     loadingDiv.style.display = 'block';
     generateButton.disabled = true;
 
-    // ** EL PROMPT CLAVE: Instrucción estricta para que la IA use etiquetas **
-    const prompt = `Actúa como un experto en SEO de Instagram. Genera exactamente 30 hashtags para una publicación/Reel con la siguiente descripción: "${description}". Clasifica los 30 hashtags en tres grupos: 10 Populares, 10 Medios y 10 de Nicho. 
-Presenta la respuesta usando las siguientes etiquetas de encabezado exactamente como se escriben:
-###POPULARES
-[Lista de 10 hashtags]
-###MEDIOS
-[Lista de 10 hashtags]
-###NICHO
-[Lista de 10 hashtags]
-No incluyas ningún texto adicional (como "Aquí tienes..." o introducciones), solo el encabezado y los hashtags, cada hashtag en una línea nueva.`;
-
     try {
-        const response = await fetch(`${API_URL}?key=${GEMINI_API_KEY}`, {
+        // Llama a la función de Netlify, enviando la descripción en el body
+        const response = await fetch(NETLIFY_FUNCTION_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }],
-                config: {
-                    temperature: 0.2 // Baja temperatura para resultados enfocados
-                }
-            })
+            // Enviamos la descripción dentro de un objeto JSON
+            body: JSON.stringify({ description: description }) 
         });
 
+        // Verificamos si la respuesta de la función es correcta
+        if (!response.ok) {
+            const errorData = await response.json();
+            // Mostrará el error que vino de la Netlify Function
+            throw new Error(errorData.error || `Error del servidor: ${response.status}`);
+        }
+        
         const data = await response.json();
-        
-        // 1. Extraer el texto de la respuesta
-        const generatedText = data.candidates[0].content.parts[0].text.trim();
-        
+        const generatedText = data.text.trim(); // La función devuelve un objeto { text: ... }
+
         // 2. Separar el texto en los tres grupos usando las etiquetas
         const parts = generatedText.split('###');
         
@@ -74,9 +65,8 @@ No incluyas ningún texto adicional (como "Aquí tienes..." o introducciones), s
         resultsDiv.style.display = 'block';
 
     } catch (error) {
-        console.error("Error al conectar con la API de Gemini:", error);
-        alert("Hubo un error al generar los hashtags. Revisa la consola o tu clave de API.");
-        // Si hay error, se mostrará el mensaje en la consola.
+        console.error("Error al generar hashtags:", error);
+        alert(`Hubo un error al generar los hashtags: ${error.message}.`);
     } finally {
         // 4. Ocultar carga y restablecer botón
         loadingDiv.style.display = 'none';
@@ -87,6 +77,13 @@ No incluyas ningún texto adicional (como "Aquí tienes..." o introducciones), s
 
 function copyCategory(id) {
     const textToCopy = document.getElementById(id).innerText;
+    
+    // ** MEJORA: Validar si hay texto para copiar **
+    if (!textToCopy.trim()) { 
+        alert("No hay hashtags que copiar en esta categoría.");
+        return;
+    }
+
     navigator.clipboard.writeText(textToCopy)
         .then(() => {
             alert(`✅ ¡Categoría copiada!`);
@@ -104,6 +101,12 @@ function copyAllHashtags() {
     
     // Unir todo el texto con saltos de línea para pegar directamente en Instagram
     const textToCopy = [popular, medium, niche].join('\n').trim();
+
+    // ** MEJORA: Validar si hay texto para copiar **
+    if (!textToCopy) { 
+        alert("No hay hashtags que copiar todavía.");
+        return;
+    }
     
     navigator.clipboard.writeText(textToCopy)
         .then(() => {
