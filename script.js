@@ -1,7 +1,7 @@
 // script.js (¡IMPORTANTE! Este código llama a la Netlify Function)
 
 // ** CONFIGURACIÓN DEL ENDPOINT SEGURO **
-// La clave de API ya no está aquí. Se encuentra oculta en Netlify.
+// La clave de API ya NO está aquí. Se encuentra oculta en Netlify.
 const NETLIFY_FUNCTION_URL = '/api/generate'; 
 
 
