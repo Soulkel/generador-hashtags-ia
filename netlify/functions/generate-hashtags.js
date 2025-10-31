@@ -40,7 +40,8 @@ No incluyas ningún texto adicional (como "Aquí tienes..." o introducciones), s
             },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: prompt }] }],
-                config: {
+                // ¡CORRECCIÓN APLICADA AQUÍ! Se cambió 'config' a 'generationConfig'
+                generationConfig: { 
                     temperature: 0.2 // Baja temperatura para precisión
                 }
             })
