@@ -4,7 +4,8 @@
 body {
     /* Aplicamos Poppins */
     font-family: 'Poppins', sans-serif; 
-    background-color: #f0f4f8; /* Fondo gris muy suave (cielo) */
+    /* Fondo degradado sutil */
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
     color: #333;
     margin: 0;
     padding: 20px;
@@ -12,6 +13,7 @@ body {
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
+    box-sizing: border-box; 
 }
 
 .container {
@@ -20,14 +22,14 @@ body {
     background-color: #fff;
     padding: 30px;
     border-radius: 16px;
-    /* Sombra más suave y moderna */
+    /* Sombra suave */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
     text-align: center;
     margin-top: 20px;
 }
 
 h1 {
-    color: #8A2BE2; /* Morado Vibrante para el acento */
+    color: #8A2BE2; /* Morado Vibrante */
     font-weight: 700;
 }
 
@@ -36,24 +38,34 @@ p {
     color: #666;
 }
 
+/* ---------------------------------
+   2. Área de Texto con Sombra Mejorada
+--------------------------------- */
 textarea {
     width: 95%;
+    max-width: 600px;
     height: 120px;
     padding: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     border: 1px solid #dcdfe4;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 16px;
     resize: vertical;
-    transition: border-color 0.3s;
+    transition: all 0.3s ease; 
+    /* Sombra inicial */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); 
 }
 
 textarea:focus {
-    border-color: #8A2BE2;
+    border-color: #8A2BE2; 
     outline: none;
+    /* Sombra con acento y más profunda al enfocar */
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.2); 
 }
 
-/* Estilo para Botones Principales */
+/* ---------------------------------
+   3. Estilo de Botones
+--------------------------------- */
 button {
     background-color: #8A2BE2; /* Morado */
     color: white;
@@ -78,14 +90,36 @@ button:disabled {
     box-shadow: none;
 }
 
+/* Estilos para el botón de Copiar Individual */
+.copy-small {
+    background-color: #4CAF50; /* Botón Copiar en Verde */
+    padding: 8px 18px;
+    font-size: 14px;
+    margin-top: auto; 
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
+}
+
+.copy-small:hover {
+    background-color: #43A047;
+}
+
+/* Estilos para el botón de Copiar Todos */
+#copy-all-button {
+    background-color: #FF4500; /* Naranja/Rojo */
+    margin-top: 15px;
+}
+#copy-all-button:hover {
+    background-color: #D32F2F;
+}
+
 /* ---------------------------------
-   2. Animación de Carga
+   4. Animación de Carga (Spinner)
 --------------------------------- */
 .loading {
     margin: 20px 0;
     color: #8A2BE2;
     font-weight: 600;
-    /* Estilo del spinner */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -109,7 +143,7 @@ button:disabled {
 
 
 /* ---------------------------------
-   3. Contenedor de Resultados (Cards)
+   5. Contenedor de Resultados (Cards)
 --------------------------------- */
 .results-container {
     margin-top: 40px;
@@ -141,7 +175,7 @@ button:disabled {
     border: 1px solid #e9eef2;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Alineamos a la izquierda */
+    align-items: flex-start; /* Alineamos el contenido a la izquierda */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
@@ -155,7 +189,7 @@ button:disabled {
     align-items: center;
 }
 
-/* Estilo para los diferentes encabezados */
+/* Colores para las tarjetas */
 .hashtag-column:nth-child(1) h3 { color: #FF4500; } /* Populares (Naranja) */
 .hashtag-column:nth-child(2) h3 { color: #1E90FF; } /* Medios (Azul) */
 .hashtag-column:nth-child(3) h3 { color: #32CD32; } /* Nicho (Verde) */
@@ -171,45 +205,13 @@ button:disabled {
     color: #222;
 }
 
-.copy-small {
-    background-color: #4CAF50; /* Botón Copiar en Verde */
-    padding: 8px 18px;
-    font-size: 14px;
-    margin-top: auto; /* Empuja el botón hacia abajo */
-    border-radius: 20px;
-    box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
-}
-
-.copy-small:hover {
-    background-color: #43A047;
-}
-
-/* Botón de Copiar Todos */
-#copy-all-button {
-    background-color: #FF4500;
-    margin-top: 15px;
-}
-#copy-all-button:hover {
-    background-color: #D32F2F;
-}
-
-/* Línea divisoria más sutil */
+/* ---------------------------------
+   6. Footer y Media Queries
+--------------------------------- */
 hr {
     border: 0;
     border-top: 1px solid #f0f4f8; 
     margin: 30px 0;
-}
-
-/* ---------------------------------
-   4. Adaptación a Móviles
---------------------------------- */
-@media (max-width: 850px) {
-    .hashtag-grid {
-        grid-template-columns: 1fr; /* 1 columna en móviles */
-    }
-    .container {
-        padding: 20px;
-    }
 }
 
 footer {
@@ -217,4 +219,14 @@ footer {
     padding-bottom: 20px;
     font-size: 12px;
     color: #999;
+}
+
+/* Adaptación para móviles */
+@media (max-width: 850px) {
+    .hashtag-grid {
+        grid-template-columns: 1fr; /* 1 columna en móviles */
+    }
+    .container {
+        padding: 20px;
+    }
 }
