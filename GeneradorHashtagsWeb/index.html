@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Hashtags IA para Reels 🚀</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Generador de Hashtags IA para Reels ✨</h1>
+        <p>Introduce la descripción de tu Reel, y la IA generará una lista optimizada de 30 hashtags clasificados por Popularidad (Populares, Medios y Nicho).</p>
+
+        <textarea id="reel-description" placeholder="Describe tu Reel (ej: Receta de tacos veganos para principiantes)"></textarea>
+
+        <button id="generate-button" onclick="generateHashtags()">
+            Generar Hashtags
+        </button>
+
+        <div id="loading" class="loading" style="display:none;">
+            Cargando... La IA está pensando... 🧠
+        </div>
+
+        <div id="results" class="results-container" style="display:none;">
+            <h2>✨ Hashtags Optimizados por IA (30 en total)</h2>
+            
+            <div class="hashtag-grid">
+                
+                <div class="hashtag-column">
+                    <h3>📈 Populares</h3>
+                    <div id="popular-output" class="hashtag-output"></div>
+                    <button onclick="copyCategory('popular-output')" class="copy-small">Copiar</button>
+                </div>
+
+                <div class="hashtag-column">
+                    <h3>📊 Medios</h3>
+                    <div id="medium-output" class="hashtag-output"></div>
+                    <button onclick="copyCategory('medium-output')" class="copy-small">Copiar</button>
+                </div>
+
+                <div class="hashtag-column">
+                    <h3>🔬 Nicho</h3>
+                    <div id="niche-output" class="hashtag-output"></div>
+                    <button onclick="copyCategory('niche-output')" class="copy-small">Copiar</button>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <button id="copy-all-button" onclick="copyAllHashtags()">
+                Copiar los 30 Hashtags
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Herramienta gratuita y de Riesgo Cero, potenciada por Google Gemini y Netlify.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
