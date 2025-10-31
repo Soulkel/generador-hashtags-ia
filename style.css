@@ -2,7 +2,6 @@
    1. Base y Tipografía
 --------------------------------- */
 body {
-    /* Aplicamos Poppins */
     font-family: 'Poppins', sans-serif; 
     /* Fondo degradado sutil */
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
@@ -22,7 +21,6 @@ body {
     background-color: #fff;
     padding: 30px;
     border-radius: 16px;
-    /* Sombra suave */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
     text-align: center;
     margin-top: 20px;
@@ -52,14 +50,12 @@ textarea {
     font-size: 16px;
     resize: vertical;
     transition: all 0.3s ease; 
-    /* Sombra inicial */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); 
 }
 
 textarea:focus {
     border-color: #8A2BE2; 
     outline: none;
-    /* Sombra con acento y más profunda al enfocar */
     box-shadow: 0 6px 20px rgba(138, 43, 226, 0.2); 
 }
 
@@ -71,7 +67,7 @@ button {
     color: white;
     padding: 14px 30px;
     border: none;
-    border-radius: 30px; /* Botón tipo "píldora" */
+    border-radius: 30px; 
     cursor: pointer;
     font-size: 17px;
     font-weight: 600;
@@ -84,10 +80,12 @@ button:hover {
     box-shadow: 0 6px 15px rgba(138, 43, 226, 0.4);
 }
 
+/* Estado Deshabilitado (CRÍTICO para UX) */
 button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
     box-shadow: none;
+    opacity: 0.7;
 }
 
 /* Estilos para el botón de Copiar Individual */
@@ -106,7 +104,7 @@ button:disabled {
 
 /* Estilos para el botón de Copiar Todos */
 #copy-all-button {
-    background-color: #FF4500; /* Naranja/Rojo */
+    background-color: #FF4500; 
     margin-top: 15px;
 }
 #copy-all-button:hover {
@@ -143,7 +141,7 @@ button:disabled {
 
 
 /* ---------------------------------
-   5. Contenedor de Resultados (Cards)
+   5. Contenedor de Resultados (Cards) - CORREGIDO
 --------------------------------- */
 .results-container {
     margin-top: 40px;
@@ -168,15 +166,18 @@ button:disabled {
     margin-bottom: 30px;
 }
 
+/* CORRECCIÓN DE ALINEACIÓN */
 .hashtag-column {
-    background-color: #f9fbfd; /* Fondo muy ligero para contraste */
+    background-color: #f9fbfd; 
     padding: 20px;
     border-radius: 10px;
     border: 1px solid #e9eef2;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Alineamos el contenido a la izquierda */
+    /* Centrado para alinear el botón correctamente */
+    align-items: center; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    text-align: center;
 }
 
 .hashtag-column h3 {
@@ -189,10 +190,9 @@ button:disabled {
     align-items: center;
 }
 
-/* Colores para las tarjetas */
-.hashtag-column:nth-child(1) h3 { color: #FF4500; } /* Populares (Naranja) */
-.hashtag-column:nth-child(2) h3 { color: #1E90FF; } /* Medios (Azul) */
-.hashtag-column:nth-child(3) h3 { color: #32CD32; } /* Nicho (Verde) */
+.hashtag-column:nth-child(1) h3 { color: #FF4500; } 
+.hashtag-column:nth-child(2) h3 { color: #1E90FF; } 
+.hashtag-column:nth-child(3) h3 { color: #32CD32; } 
 
 
 .hashtag-output {
@@ -201,7 +201,7 @@ button:disabled {
     text-align: left;
     white-space: pre-wrap;
     font-size: 14px;
-    line-height: 1.8; /* Más espacio entre hashtags */
+    line-height: 1.8; 
     color: #222;
 }
 
@@ -224,7 +224,7 @@ footer {
 /* Adaptación para móviles */
 @media (max-width: 850px) {
     .hashtag-grid {
-        grid-template-columns: 1fr; /* 1 columna en móviles */
+        grid-template-columns: 1fr; 
     }
     .container {
         padding: 20px;

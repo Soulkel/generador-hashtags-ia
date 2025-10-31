@@ -1,119 +1,88 @@
-// script.js (¡IMPORTANTE! Este código llama a la Netlify Function)
-
-// ** CONFIGURACIÓN DEL ENDPOINT SEGURO **
-// La clave de API ya NO está aquí. Se encuentra oculta en Netlify.
-const NETLIFY_FUNCTION_URL = '/api/generate'; 
-
-
-async function generateHashtags() {
-    const description = document.getElementById('reel-description').value;
-    const loadingDiv = document.getElementById('loading');
-    const resultsDiv = document.getElementById('results');
-    const generateButton = document.getElementById('generate-button');
+// Función para copiar una categoría específica de hashtags
+function copyCategory(elementId) {
+    const outputElement = document.getElementById(elementId);
+    const textToCopy = outputElement.innerText;
     
-    if (!description.trim()) {
-        alert("Por favor, introduce una descripción para tu Reel.");
-        return;
-    }
-
-    // 1. Mostrar estado de carga
-    resultsDiv.style.display = 'none';
-    loadingDiv.style.display = 'block';
-    generateButton.disabled = true;
-
-    try {
-        // Llama a la función de Netlify, enviando la descripción en el body
-        const response = await fetch(NETLIFY_FUNCTION_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            // Enviamos la descripción dentro de un objeto JSON
-            body: JSON.stringify({ description: description }) 
+    if (textToCopy) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            alert('¡Hashtags copiados! Listo para pegar en Instagram.');
+        }).catch(err => {
+            console.error('Error al copiar: ', err);
+            alert('Error al intentar copiar.');
         });
-
-        // Verificamos si la respuesta de la función es correcta
-        if (!response.ok) {
-            const errorData = await response.json();
-            // Mostrará el error que vino de la Netlify Function
-            throw new Error(errorData.error || `Error del servidor: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        const generatedText = data.text.trim(); // La función devuelve un objeto { text: ... }
-
-        // 2. Separar el texto en los tres grupos usando las etiquetas
-        const parts = generatedText.split('###');
-        
-        // Limpiamos los contenedores antes de insertar
-        document.getElementById('popular-output').innerText = '';
-        document.getElementById('medium-output').innerText = '';
-        document.getElementById('niche-output').innerText = '';
-
-        // Procesamos cada parte e insertamos en la columna correcta
-        for (const part of parts) {
-            if (part.includes('POPULARES')) {
-                document.getElementById('popular-output').innerText = part.replace('POPULARES\n', '').trim();
-            } else if (part.includes('MEDIOS')) {
-                document.getElementById('medium-output').innerText = part.replace('MEDIOS\n', '').trim();
-            } else if (part.includes('NICHO')) {
-                document.getElementById('niche-output').innerText = part.replace('NICHO\n', '').trim();
-            }
-        }
-        
-        // 3. Mostrar el contenedor de resultados
-        resultsDiv.style.display = 'block';
-
-    } catch (error) {
-        console.error("Error al generar hashtags:", error);
-        alert(`Hubo un error al generar los hashtags: ${error.message}.`);
-    } finally {
-        // 4. Ocultar carga y restablecer botón
-        loadingDiv.style.display = 'none';
-        generateButton.disabled = false;
     }
 }
 
-
-function copyCategory(id) {
-    const textToCopy = document.getElementById(id).innerText;
-    
-    // ** MEJORA: Validar si hay texto para copiar **
-    if (!textToCopy.trim()) { 
-        alert("No hay hashtags que copiar en esta categoría.");
-        return;
-    }
-
-    navigator.clipboard.writeText(textToCopy)
-        .then(() => {
-            alert(`✅ ¡Categoría copiada!`);
-        })
-        .catch(err => {
-            console.error('Error al intentar copiar: ', err);
-            alert("Error al copiar. Por favor, selecciona y copia el texto manualmente.");
-        });
-}
-
+// Función para copiar todos los hashtags
 function copyAllHashtags() {
     const popular = document.getElementById('popular-output').innerText;
     const medium = document.getElementById('medium-output').innerText;
     const niche = document.getElementById('niche-output').innerText;
-    
-    // Unir todo el texto con saltos de línea para pegar directamente en Instagram
-    const textToCopy = [popular, medium, niche].join('\n').trim();
 
-    // ** MEJORA: Validar si hay texto para copiar **
-    if (!textToCopy) { 
-        alert("No hay hashtags que copiar todavía.");
+    const allHashtags = `${popular}\n${medium}\n${niche}`;
+    
+    if (allHashtags) {
+        navigator.clipboard.writeText(allHashtags).then(() => {
+            alert('¡Los 30 Hashtags copiados! Listo para pegar en Instagram.');
+        }).catch(err => {
+            console.error('Error al copiar todos: ', err);
+            alert('Error al intentar copiar todos.');
+        });
+    }
+}
+
+// Función principal para generar los hashtags
+async function generateHashtags() {
+    const description = document.getElementById('reel-description').value;
+    const loadingDiv = document.getElementById('loading');
+    const resultsDiv = document.getElementById('results');
+    const generateButton = document.getElementById('generate-button'); // CRÍTICO
+
+    if (!description) {
+        alert('Por favor, introduce una descripción para tu Reel.');
         return;
     }
+
+    // 1. Mostrar carga y deshabilitar botón
+    resultsDiv.style.display = 'none';
+    loadingDiv.style.display = 'flex';
+    generateButton.disabled = true; // Deshabilitar para evitar spam de clicks
+
+    // Limpiar resultados anteriores
+    document.getElementById('popular-output').innerText = '';
+    document.getElementById('medium-output').innerText = '';
+    document.getElementById('niche-output').innerText = '';
     
-    navigator.clipboard.writeText(textToCopy)
-        .then(() => {
-            alert("✅ ¡Los 30 Hashtags copiados!");
-        })
-        .catch(err => {
-            console.error('Error al intentar copiar: ', err);
-            alert("Error al copiar. Por favor, selecciona y copia el texto manualmente.");
+    try {
+        const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ description })
         });
+
+        if (!response.ok) {
+            throw new Error(`Error en la función Serverless: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        // 2. Ocultar carga y mostrar resultados
+        loadingDiv.style.display = 'none';
+        resultsDiv.style.display = 'block';
+
+        // Llenar las columnas con los resultados
+        document.getElementById('popular-output').innerText = data.popular.join(' ');
+        document.getElementById('medium-output').innerText = data.medium.join(' ');
+        document.getElementById('niche-output').innerText = data.niche.join(' ');
+
+    } catch (error) {
+        console.error('Error al generar hashtags:', error);
+        alert(`Ocurrió un error. Verifica que tu clave de API en Netlify sea válida. Detalle: ${error.message}`);
+        loadingDiv.style.display = 'none';
+    } finally {
+        // 3. Habilitar botón al finalizar (o fallar)
+        generateButton.disabled = false;
+    }
 }
