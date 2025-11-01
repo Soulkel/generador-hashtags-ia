@@ -1,5 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 
+
 // La clave se lee automáticamente de la variable de entorno GEMINI_API_KEY
 const apiKey = process.env.GEMINI_API_KEY;
 

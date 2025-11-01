@@ -4,9 +4,9 @@
   "description": "Generador de hashtags usando Gemini y Netlify Functions.",
   "main": "script.js",
   "dependencies": {
-    "@google/genai": "^0.1.0" 
+    "@google/genai": "^1.28.0"
   },
   "engines": {
-    "node": "20.x" 
+    "node": "20.x"
   }
 }
