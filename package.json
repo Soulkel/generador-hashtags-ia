@@ -1,10 +1,10 @@
 {
   "name": "generador-hashtags-ia",
   "version": "1.0.0",
-  "description": "Generador de hashtags usando Gemini y Netlify Functions.",
+  "description": "Generador de hashtags usando OpenAI y Netlify Functions.",
   "main": "script.js",
   "dependencies": {
-    "@google/genai": "^1.28.0"
+    "openai": "^4.0.0" 
   },
   "engines": {
     "node": "20.x"
