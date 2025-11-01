@@ -1,7 +1,7 @@
-// Función para copiar una categoría específica de hashtags
+// Función para copiar una categoría específica de hashtags (sin modificar)
 function copyCategory(elementId) {
     const outputElement = document.getElementById(elementId);
-    const textToCopy = outputElement.innerText;
+    const textToCopy = outputElement ? outputElement.innerText.trim() : ''; 
     
     if (textToCopy) {
         navigator.clipboard.writeText(textToCopy).then(() => {
@@ -13,15 +13,15 @@ function copyCategory(elementId) {
     }
 }
 
-// Función para copiar todos los hashtags
+// Función para copiar todos los hashtags (sin modificar)
 function copyAllHashtags() {
-    const popular = document.getElementById('popular-output').innerText;
-    const medium = document.getElementById('medium-output').innerText;
-    const niche = document.getElementById('niche-output').innerText;
+    const popular = document.getElementById('popular-output').innerText.trim();
+    const medium = document.getElementById('medium-output').innerText.trim();
+    const niche = document.getElementById('niche-output').innerText.trim();
 
-    const allHashtags = `${popular}\n${medium}\n${niche}`;
+    const allHashtags = `${popular}\n\n${medium}\n\n${niche}`;
     
-    if (allHashtags) {
+    if (allHashtags.trim()) {
         navigator.clipboard.writeText(allHashtags).then(() => {
             alert('¡Los 30 Hashtags copiados! Listo para pegar en Instagram.');
         }).catch(err => {
@@ -31,13 +31,18 @@ function copyAllHashtags() {
     }
 }
 
-// Función principal para generar los hashtags
+// Función principal para generar los hashtags (CORREGIDA LA RUTA Y EL PARSEO)
 async function generateHashtags() {
     const description = document.getElementById('reel-description').value;
     const loadingDiv = document.getElementById('loading');
     const resultsDiv = document.getElementById('results');
-    const generateButton = document.getElementById('generate-button'); // CRÍTICO
-
+    const generateButton = document.getElementById('generate-button');
+    
+    // Limpiar resultados anteriores
+    document.getElementById('popular-output').innerText = '';
+    document.getElementById('medium-output').innerText = '';
+    document.getElementById('niche-output').innerText = '';
+    
     if (!description) {
         alert('Por favor, introduce una descripción para tu Reel.');
         return;
@@ -46,43 +51,46 @@ async function generateHashtags() {
     // 1. Mostrar carga y deshabilitar botón
     resultsDiv.style.display = 'none';
     loadingDiv.style.display = 'flex';
-    generateButton.disabled = true; // Deshabilitar para evitar spam de clicks
+    generateButton.disabled = true;
 
-    // Limpiar resultados anteriores
-    document.getElementById('popular-output').innerText = '';
-    document.getElementById('medium-output').innerText = '';
-    document.getElementById('niche-output').innerText = '';
-    
     try {
-        const response = await fetch('/api/generate', {
+        // Usamos /api/generate gracias a la redirección en netlify.toml
+        const response = await fetch('/api/generate', { 
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ description })
         });
 
-        if (!response.ok) {
-            throw new Error(`Error en la función Serverless: ${response.statusText}`);
-        }
-
-        const data = await response.json();
+        // 2. Intentamos leer la respuesta del servidor como JSON
+        const responseData = await response.json();
         
-        // 2. Ocultar carga y mostrar resultados
+        // 3. Manejo de errores (Servidor o clave inválida)
+        if (!response.ok || responseData.error) {
+            const errorMessage = responseData.error || `Error del Servidor: HTTP ${response.status} (${response.statusText})`;
+            throw new Error(errorMessage);
+        }
+        
+        // <<<< CORRECCIÓN CRÍTICA: DOBLE PARSEO >>>>
+        const hashtags = JSON.parse(responseData.body); 
+        // <<<< FIN DE CORRECCIÓN CRÍTICA >>>>
+        
+        // 4. Ocultar carga y mostrar resultados
         loadingDiv.style.display = 'none';
         resultsDiv.style.display = 'block';
 
+        // Función auxiliar para formatear con el símbolo #
+        const formatForDisplay = (list) => list.map(h => `#${h.replace(/^#/, '')}`).join(' ');
+
         // Llenar las columnas con los resultados
-        document.getElementById('popular-output').innerText = data.popular.join(' ');
-        document.getElementById('medium-output').innerText = data.medium.join(' ');
-        document.getElementById('niche-output').innerText = data.niche.join(' ');
+        document.getElementById('popular-output').innerText = formatForDisplay(hashtags.popular);
+        document.getElementById('medium-output').innerText = formatForDisplay(hashtags.medium);
+        document.getElementById('niche-output').innerText = formatForDisplay(hashtags.niche);
 
     } catch (error) {
         console.error('Error al generar hashtags:', error);
         alert(`Ocurrió un error. Verifica que tu clave de API en Netlify sea válida. Detalle: ${error.message}`);
         loadingDiv.style.display = 'none';
     } finally {
-        // 3. Habilitar botón al finalizar (o fallar)
         generateButton.disabled = false;
     }
 }

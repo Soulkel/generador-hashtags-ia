@@ -11,8 +11,9 @@ const ai = new GoogleGenAI({ apiKey });
 // ----------------------------------------------------------------------
 exports.handler = async (event) => {
     // 1. Verificación básica del método y clave
+    // Esto es lo que devuelve el error 405 (Method Not Allowed)
     if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: JSON.stringify({ error: "Método no permitido." }) };
+        return { statusCode: 405, body: JSON.stringify({ error: "Método no permitido. Usa POST." }) };
     }
 
     if (!apiKey) {
@@ -35,7 +36,6 @@ exports.handler = async (event) => {
         }
         
         // 3. Prompt de la IA
-        // Se instruye a la IA para que devuelva un JSON que coincide con lo que el frontend espera.
         const prompt = `Actúa como un experto en SEO de Instagram. Genera exactamente 30 hashtags para una publicación/Reel con la siguiente descripción: "${description}". Clasifica los 30 hashtags en tres grupos: 10 Populares, 10 Medios y 10 de Nicho.
         
         Devuélveme la respuesta ÚNICAMENTE como un objeto JSON válido con tres propiedades: "popular", "medium", y "niche", donde cada una contiene un array de 10 strings (hashtags). NO incluyas ninguna explicación, markdown (como \`\`\`json), o texto adicional, solo el JSON puro.`;
@@ -62,7 +62,6 @@ exports.handler = async (event) => {
         // 6. Captura de Errores Robustos (Autenticación, Límite, o JSON Inválido)
         console.error("Error en Netlify Function:", error.message);
         
-        // Si el error es una falla de autenticación o límite de la API, devolvemos un mensaje claro.
         let errorMessage = "Error en la función Serverless. Revisa los logs de Netlify.";
         if (error.message && (error.message.includes('API key') || error.message.includes('rate limit'))) {
             errorMessage = `Verifica tu clave de API en Netlify sea válida. Detalle: ${error.message}`;
