@@ -1,39 +1,32 @@
 // 1. Importar la librería de OpenAI
 import { OpenAI } from "openai";
 
-// La clave se lee de la variable de entorno (localmente del .env, remotamente de Netlify)
+// La clave se lee de la variable de entorno
 const apiKey = process.env.OPENAI_API_KEY;
 
 // Inicializa el cliente de OpenAI.
 const openai = new OpenAI({ apiKey });
 
 // ----------------------------------------------------------------------
-// FUNCIÓN PRINCIPAL DE NETLIFY HANDLER
+// FUNCIÓN PRINCIPAL (Sintaxis compatible con Vercel)
 // ----------------------------------------------------------------------
-export const handler = async (event) => {
-    // 1. Verificación básica del método
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: JSON.stringify({ error: "Método no permitido. Usa POST." }) };
+export default async function handler(request, response) {
+    
+    // 1. Verificación básica del método y clave
+    if (request.method !== 'POST') {
+        return response.status(405).json({ error: "Método no permitido. Usa POST." });
     }
 
-    // Verificación de la clave: Se mantiene para un diagnóstico rápido
     if (!apiKey) {
-        console.error("Error: OPENAI_API_KEY no está definida.");
-        return { 
-            statusCode: 500, 
-            body: JSON.stringify({ error: "Fallo de configuración: La clave de API de OpenAI no está definida." }) 
-        };
+        return response.status(500).json({ error: "Fallo de configuración: La clave de API de OpenAI no está definida." });
     }
 
     try {
-        // 2. Extraer y verificar la descripción
-        const { description } = JSON.parse(event.body);
+        // 2. Extraer y verificar la descripción (Vercel lee el body directamente)
+        const { description } = request.body;
 
         if (!description || description.trim() === '') {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({ error: "Descripción del Reel requerida." }),
-            };
+            return response.status(400).json({ error: "Descripción del Reel requerida." });
         }
         
         // 3. Prompt de la IA (Optimizado para generar el JSON)
@@ -41,57 +34,46 @@ export const handler = async (event) => {
         
         const userPrompt = `Genera exactamente 30 hashtags para una publicación/Reel con la siguiente descripción: "${description}". Clasifica los 30 hashtags en tres grupos: 10 Populares, 10 Medios y 10 de Nicho. El JSON debe tener esta estructura: {"popular": ["#tag1", ...], "medium": ["#tag1", ...], "niche": ["#tag1", ...]}`;
         
-        // 4. Llamada a la API de OpenAI con configuración de JSON
-        const response = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo', // Modelo rápido y económico
+        // 4. Llamada a la API de OpenAI
+        const openaiResponse = await openai.chat.completions.create({
+            model: 'gpt-3.5-turbo',
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: userPrompt }
             ],
-            // Esto le indica a la IA que debe devolver un objeto JSON
             response_format: { type: "json_object" }, 
             temperature: 0.2
         });
         
-        const jsonText = response.choices[0].message.content.trim();
+        const jsonText = openaiResponse.choices[0].message.content.trim();
 
-        // 5. Comprobación de Seguridad de Respuesta JSON
+        // 5. Comprobación de Seguridad: Aseguramos que la respuesta es JSON
         try {
-            // Intentamos parsear para confirmar que la IA envió JSON correcto
-            JSON.parse(jsonText); 
+            const hashtagsObject = JSON.parse(jsonText); 
+            // 6. Devolver la respuesta al frontend (¡ÉXITO!)
+            return response.status(200).json(hashtagsObject);
         } catch (e) {
             console.error("ERROR GPT FORMATO:", jsonText);
-            return {
-                 statusCode: 500,
-                 body: JSON.stringify({ error: `Fallo de OpenAI: La IA devolvió texto que no era JSON. Contenido: ${jsonText.substring(0, 100)}...` }),
-            };
+            return response.status(500).json({ error: `Fallo de OpenAI: La IA devolvió texto que no era JSON. Contenido: ${jsonText.substring(0, 100)}...` });
         }
 
-        // 6. Devolver la respuesta al frontend
-        return {
-            statusCode: 200,
-            body: jsonText, 
-        };
-
     } catch (error) {
-        // 7. Captura de Errores FINAL y Robusta (Para diagnosticar clave o cuota)
+        // 7. Captura de Errores FINAL y Robusta 
         console.error("ERROR FINAL DE API:", error); 
         
         let errorMessage = "Fallo desconocido de la función Serverless.";
+        let statusCode = 500;
 
-        // Diagnóstico basado en el estado HTTP de la API de OpenAI
         if (error.status === 401) {
-             errorMessage = "Clave de API INVÁLIDA o no activa. Verifica el valor y la facturación en OpenAI.";
+             errorMessage = "Clave de API INVÁLIDA o no activa. Verifica la facturación en OpenAI.";
+             statusCode = 401;
         } else if (error.status === 429) {
              errorMessage = "Límite de Gasto o Cuota Excedido. Verifica los límites en el panel de OpenAI.";
+             statusCode = 429;
         } else if (error.message) {
-            // Mensaje de error general
             errorMessage = `Fallo de API: ${error.message.substring(0, 100)}...`;
         }
 
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: errorMessage }), // Siempre devolvemos JSON válido
-        };
+        return response.status(statusCode).json({ error: errorMessage });
     }
-};
+}

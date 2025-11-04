@@ -1,4 +1,72 @@
-// Función principal para generar los hashtags (VERSIÓN FINAL Y CORREGIDA)
+// Función auxiliar de respaldo para la copia (más fiable en localhost/pruebas)
+function fallbackCopyText(textToCopy, successMessage) {
+    if (!textToCopy) return;
+    const tempInput = document.createElement('textarea');
+    tempInput.value = textToCopy;
+    tempInput.style.position = 'fixed';
+    tempInput.style.opacity = '0';
+    document.body.appendChild(tempInput);
+    tempInput.focus();
+    tempInput.select();
+
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            alert(successMessage);
+        } else {
+            throw new Error('Copia manual requerida.');
+        }
+    } catch (err) {
+        console.error('Error al intentar copiar:', err);
+        alert('Error al copiar. Por favor, selecciona el texto y cópialo manualmente.');
+    } finally {
+        document.body.removeChild(tempInput);
+    }
+}
+
+// Función para copiar una categoría específica de hashtags
+function copyCategory(elementId) {
+    const outputElement = document.getElementById(elementId);
+    const textToCopy = outputElement ? outputElement.innerText.trim() : '';
+    const successMsg = '¡Hashtags copiados! Listo para pegar en Instagram.';
+    
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            alert(successMsg);
+        }).catch(err => {
+            console.error('navigator.clipboard falló, usando método de respaldo:', err);
+            fallbackCopyText(textToCopy, successMsg);
+        });
+    } else {
+        fallbackCopyText(textToCopy, successMsg);
+    }
+}
+
+// Función para copiar todos los hashtags
+function copyAllHashtags() {
+    const popular = document.getElementById('popular-output').innerText.trim();
+    const medium = document.getElementById('medium-output').innerText.trim();
+    const niche = document.getElementById('niche-output').innerText.trim();
+    const allHashtags = `${popular}\n\n${medium}\n\n${niche}`;
+    const successMsg = '¡Los 30 Hashtags copiados! Listo para pegar en Instagram.';
+
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(allHashtags).then(() => {
+            alert(successMsg);
+        }).catch(err => {
+            console.error('navigator.clipboard falló, usando método de respaldo:', err);
+            fallbackCopyText(allHashtags, successMsg);
+        });
+    } else {
+        fallbackCopyText(allHashtags, successMsg);
+    }
+}
+
+// Función auxiliar para formatear con el símbolo # y saltos de línea (CORREGIDO)
+const formatForDisplay = (list) => list.map(h => `#${h.replace(/^#/, '')}`).join('\n');
+
+
+// Función principal para generar los hashtags (FINAL CORREGIDA)
 async function generateHashtags() {
     const description = document.getElementById('reel-description').value;
     const loadingDiv = document.getElementById('loading');
@@ -21,33 +89,28 @@ async function generateHashtags() {
     generateButton.disabled = true;
 
     try {
-        // Usamos la ruta directa a la función serverless
-        const response = await fetch('/.netlify/functions/generate-hashtags', { 
+        // RUTA DE VERSEL: Apuntamos a la función api/generate.js
+        const response = await fetch('/api/generate', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ description })
         });
 
-        // 2. Leemos la respuesta. Si hay un error HTTP, esto contendrá el JSON de error.
+        // 2. Leemos la respuesta.
         const responseData = await response.json(); 
         
-        // 3. Manejo de errores: Si el status HTTP no es 200, o si el JSON de respuesta tiene un campo 'error'.
+        // 3. Manejo de errores: Si el status HTTP no es 200, o si el JSON tiene un campo 'error'.
         if (!response.ok) {
             const errorMessage = responseData.error || `Error del Servidor: HTTP ${response.status}`;
             throw new Error(errorMessage);
         }
         
-        // CORRECCIÓN CRÍTICA: responseData AHORA ES EL OBJETO JSON DIRECTO DE LOS HASHTAGS (porque el backend devolvió el texto JSON).
+        // La respuesta ya es el objeto JSON directo de los hashtags.
         const hashtags = responseData;
         
         // 4. Ocultar carga y mostrar resultados
         loadingDiv.style.display = 'none';
         resultsDiv.style.display = 'block';
-
-        // Función auxiliar para formatear con el símbolo #
-       const formatForDisplay = (list) => list.map(h => `#${h.replace(/^#/, '')}`).join('\n');
-        //                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 
         // Llenar las columnas con los resultados
         document.getElementById('popular-output').innerText = formatForDisplay(hashtags.popular);
