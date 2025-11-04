@@ -1,7 +1,7 @@
-// 1. Importar la nueva librería: OpenAI
+// 1. Importar la librería de OpenAI
 import { OpenAI } from "openai";
 
-// La clave ahora se lee de la variable OPENAI_API_KEY
+// La clave se lee de la variable de entorno (localmente del .env, remotamente de Netlify)
 const apiKey = process.env.OPENAI_API_KEY;
 
 // Inicializa el cliente de OpenAI.
@@ -10,14 +10,15 @@ const openai = new OpenAI({ apiKey });
 // ----------------------------------------------------------------------
 // FUNCIÓN PRINCIPAL DE NETLIFY HANDLER
 // ----------------------------------------------------------------------
-export const handler = async (event) => { // Cambiado a 'export const handler' para la sintaxis moderna
-    // 1. Verificación básica del método y clave
+export const handler = async (event) => {
+    // 1. Verificación básica del método
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: JSON.stringify({ error: "Método no permitido. Usa POST." }) };
     }
 
+    // Verificación de la clave: Se mantiene para un diagnóstico rápido
     if (!apiKey) {
-        console.error("Error: OPENAI_API_KEY no está definida en Netlify.");
+        console.error("Error: OPENAI_API_KEY no está definida.");
         return { 
             statusCode: 500, 
             body: JSON.stringify({ error: "Fallo de configuración: La clave de API de OpenAI no está definida." }) 
@@ -35,7 +36,7 @@ export const handler = async (event) => { // Cambiado a 'export const handler' p
             };
         }
         
-        // 3. Prompt de la IA (Adaptado ligeramente para GPT)
+        // 3. Prompt de la IA (Optimizado para generar el JSON)
         const systemPrompt = "Actúa como un experto en SEO de Instagram. Tu única tarea es devolver el resultado como un objeto JSON válido con tres propiedades: 'popular', 'medium', y 'niche'. NO incluyas ninguna explicación, markdown, o texto adicional, solo el JSON puro.";
         
         const userPrompt = `Genera exactamente 30 hashtags para una publicación/Reel con la siguiente descripción: "${description}". Clasifica los 30 hashtags en tres grupos: 10 Populares, 10 Medios y 10 de Nicho. El JSON debe tener esta estructura: {"popular": ["#tag1", ...], "medium": ["#tag1", ...], "niche": ["#tag1", ...]}`;
@@ -54,25 +55,43 @@ export const handler = async (event) => { // Cambiado a 'export const handler' p
         
         const jsonText = response.choices[0].message.content.trim();
 
-        // 5. Devolver la respuesta al frontend
-        // El contenido de la respuesta ya debería ser el JSON generado.
+        // 5. Comprobación de Seguridad de Respuesta JSON
+        try {
+            // Intentamos parsear para confirmar que la IA envió JSON correcto
+            JSON.parse(jsonText); 
+        } catch (e) {
+            console.error("ERROR GPT FORMATO:", jsonText);
+            return {
+                 statusCode: 500,
+                 body: JSON.stringify({ error: `Fallo de OpenAI: La IA devolvió texto que no era JSON. Contenido: ${jsonText.substring(0, 100)}...` }),
+            };
+        }
+
+        // 6. Devolver la respuesta al frontend
         return {
             statusCode: 200,
             body: jsonText, 
         };
 
     } catch (error) {
-        // 6. Captura de Errores Robustos
-        console.error("Error en Netlify Function (OpenAI):", error.message);
+        // 7. Captura de Errores FINAL y Robusta (Para diagnosticar clave o cuota)
+        console.error("ERROR FINAL DE API:", error); 
         
-        let errorMessage = "Error en la función Serverless (OpenAI). Revisa los logs de Netlify.";
-        if (error.message && (error.message.includes('API key') || error.message.includes('rate limit'))) {
-            errorMessage = `Verifica tu clave de API en Netlify sea válida. Detalle: ${error.message}`;
+        let errorMessage = "Fallo desconocido de la función Serverless.";
+
+        // Diagnóstico basado en el estado HTTP de la API de OpenAI
+        if (error.status === 401) {
+             errorMessage = "Clave de API INVÁLIDA o no activa. Verifica el valor y la facturación en OpenAI.";
+        } else if (error.status === 429) {
+             errorMessage = "Límite de Gasto o Cuota Excedido. Verifica los límites en el panel de OpenAI.";
+        } else if (error.message) {
+            // Mensaje de error general
+            errorMessage = `Fallo de API: ${error.message.substring(0, 100)}...`;
         }
 
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: errorMessage }),
+            body: JSON.stringify({ error: errorMessage }), // Siempre devolvemos JSON válido
         };
     }
 };
