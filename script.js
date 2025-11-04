@@ -90,7 +90,7 @@ async function generateHashtags() {
 
     try {
         // RUTA DE VERSEL: Apuntamos a la función api/generate.js
-        const response = await fetch('/API/generate-hashtags', { 
+        const response = await fetch('/api/generate-hashtags', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ description })
