@@ -1,12 +1,20 @@
 {
   "name": "generador-hashtags-ia",
   "version": "1.0.0",
-  "description": "Generador de hashtags usando OpenAI y Netlify Functions.",
-  "main": "script.js",
+  "description": "Generador de Hashtags IA para Reels",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "openai",
+    "vercel",
+    "serverless",
+    "hashtags"
+  ],
+  "author": "Soulkel",
+  "license": "ISC",
   "dependencies": {
     "openai": "^4.0.0" 
-  },
-  "engines": {
-    "node": "20.x"
   }
 }
