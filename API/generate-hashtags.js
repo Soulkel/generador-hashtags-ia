@@ -1,14 +1,14 @@
 // 1. Importar la librería de OpenAI
 import { OpenAI } from "openai";
 
-// La clave se lee de la variable de entorno
+// La clave se lee de la variable de entorno de Vercel
 const apiKey = process.env.OPENAI_API_KEY;
 
 // Inicializa el cliente de OpenAI.
 const openai = new OpenAI({ apiKey });
 
 // ----------------------------------------------------------------------
-// FUNCIÓN PRINCIPAL (Sintaxis compatible con Vercel)
+// FUNCIÓN PRINCIPAL DE VERSEL (Sintaxis request/response)
 // ----------------------------------------------------------------------
 export default async function handler(request, response) {
     
@@ -22,14 +22,14 @@ export default async function handler(request, response) {
     }
 
     try {
-        // 2. Extraer y verificar la descripción (Vercel lee el body directamente)
+        // 2. Extraer y verificar la descripción (Vercel lee el body automáticamente)
         const { description } = request.body;
 
         if (!description || description.trim() === '') {
             return response.status(400).json({ error: "Descripción del Reel requerida." });
         }
         
-        // 3. Prompt de la IA (Optimizado para generar el JSON)
+        // 3. Prompt de la IA
         const systemPrompt = "Actúa como un experto en SEO de Instagram. Tu única tarea es devolver el resultado como un objeto JSON válido con tres propiedades: 'popular', 'medium', y 'niche'. NO incluyas ninguna explicación, markdown, o texto adicional, solo el JSON puro.";
         
         const userPrompt = `Genera exactamente 30 hashtags para una publicación/Reel con la siguiente descripción: "${description}". Clasifica los 30 hashtags en tres grupos: 10 Populares, 10 Medios y 10 de Nicho. El JSON debe tener esta estructura: {"popular": ["#tag1", ...], "medium": ["#tag1", ...], "niche": ["#tag1", ...]}`;
