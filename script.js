@@ -45,7 +45,9 @@ async function generateHashtags() {
         resultsDiv.style.display = 'block';
 
         // Función auxiliar para formatear con el símbolo #
-        const formatForDisplay = (list) => list.map(h => `#${h.replace(/^#/, '')}`).join(' ');
+       const formatForDisplay = (list) => list.map(h => `#${h.replace(/^#/, '')}`).join('\n');
+        //                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
         // Llenar las columnas con los resultados
         document.getElementById('popular-output').innerText = formatForDisplay(hashtags.popular);
