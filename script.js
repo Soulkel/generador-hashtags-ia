@@ -1,3 +1,7 @@
+// ====================================================================
+// FUNCIONES AUXILIARES DE COPIA
+// ====================================================================
+
 // Función auxiliar de respaldo para la copia (más fiable en localhost/pruebas)
 function fallbackCopyText(textToCopy, successMessage) {
     if (!textToCopy) return;
@@ -62,11 +66,14 @@ function copyAllHashtags() {
     }
 }
 
-// Función auxiliar para formatear con el símbolo # y saltos de línea (CORREGIDO)
+// Función auxiliar para formatear con el símbolo # y saltos de línea
 const formatForDisplay = (list) => list.map(h => `#${h.replace(/^#/, '')}`).join('\n');
 
 
-// Función principal para generar los hashtags (FINAL CORREGIDA)
+// ====================================================================
+// FUNCIÓN PRINCIPAL DE GENERACIÓN (CORREGIDA PARA VERCEL)
+// ====================================================================
+
 async function generateHashtags() {
     const description = document.getElementById('reel-description').value;
     const loadingDiv = document.getElementById('loading');
@@ -89,9 +96,9 @@ async function generateHashtags() {
     generateButton.disabled = true;
 
     try {
-        // RUTA DE VERSEL: Apuntamos a la función api/generate.js
-        const response = await fetch('/api/generate-hashtags.js', { 
-            method: 'POST',
+        // RUTA DE VERSEL CORREGIDA: Usamos '/api/generate-hashtags' (sin .js ni mayúsculas en la carpeta)
+        const response = await fetch('/api/generate-hashtags', { 
+            method: 'POST', // CRÍTICO: Usar POST, como requiere la función serverless
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ description })
         });
@@ -101,6 +108,7 @@ async function generateHashtags() {
         
         // 3. Manejo de errores: Si el status HTTP no es 200, o si el JSON tiene un campo 'error'.
         if (!response.ok) {
+            // responseData.error contendrá el mensaje de la API de OpenAI si falla la clave, etc.
             const errorMessage = responseData.error || `Error del Servidor: HTTP ${response.status}`;
             throw new Error(errorMessage);
         }
