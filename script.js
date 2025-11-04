@@ -97,7 +97,7 @@ async function generateHashtags() {
 
     try {
         // RUTA DE VERSEL CORREGIDA: Usamos '/api/generate-hashtags' (sin .js ni mayúsculas en la carpeta)
-        const response = await fetch('/api/generate-hashtags', { 
+        const response = await fetch('/api/generate', { 
             method: 'POST', // CRÍTICO: Usar POST, como requiere la función serverless
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ description })
