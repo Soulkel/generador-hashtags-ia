@@ -236,9 +236,10 @@ footer {
     7. Contenido Estático (AdSense Fix)
 --------------------------------- */
 .adsense-content {
-    max-width: 800px;
+    /* Ajuste para que el contenido de AdSense no interfiera con el ancho del contenedor principal */
+    max-width: 90%; /* O un valor fijo como 900px, si tu contenedor principal es 1000px */
     width: 100%;
-    margin: 40px auto;
+    margin: 40px auto; /* Centrarlo */
     padding: 20px 0;
     text-align: left;
 }
@@ -273,4 +274,29 @@ footer:not(.legal-footer) {
     padding-bottom: 10px;
     font-size: 14px;
     color: #666;
+}
+
+/* ---------------------------------
+    8. Media Queries - Reforzado para Columnas de Hashtags
+--------------------------------- */
+@media (max-width: 850px) {
+    /* Asegurar que las columnas de hashtags se apilen en pantallas pequeñas */
+    .hashtag-grid {
+        grid-template-columns: 1fr; /* Una columna para móviles */
+        gap: 15px; /* Espacio reducido para móviles */
+    }
+    .container {
+        padding: 20px;
+    }
+    .adsense-content {
+        padding: 20px; /* Añadir padding también en los lados para móviles */
+    }
+}
+
+/* Asegurar que la cuadrícula siempre se muestre en 3 columnas en pantallas grandes */
+@media (min-width: 851px) {
+    .hashtag-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
 }
