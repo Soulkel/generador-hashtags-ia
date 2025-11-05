@@ -161,8 +161,7 @@ button:disabled {
 
 .hashtag-grid {
     display: grid;
-    /* La definición de 3 columnas se moverá al Media Query para evitar conflictos. 
-       Aquí, solo ponemos las propiedades base. */
+    /* QUITAMOS grid-template-columns: repeat(3, 1fr); de aquí - SE MUEVE AL MEDIA QUERY */
     gap: 20px; 
     margin-bottom: 30px;
 }
@@ -269,19 +268,19 @@ footer {
     8. Media Queries - SOLUCIÓN DEFINITIVA A LAS COLUMNAS
 --------------------------------- */
 
-/* Para pantallas grandes (Desktop/Tablet Ancha): 3 columnas */
+/* Regla para pantallas grandes (Desktop/Tablet Ancha - más de 650px): 3 columnas */
 @media (min-width: 651px) {
     .hashtag-grid {
-        /* Forzamos 3 columnas cuando hay espacio suficiente */
+        /* Forzamos 3 columnas */
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
     }
 }
 
-/* Para pantallas pequeñas (Móviles - de 650px para abajo): 1 columna */
+/* Regla para pantallas pequeñas (Móviles - 650px o menos): 1 columna */
 @media (max-width: 650px) { 
     .hashtag-grid {
-        /* Apilar las columnas para que quepan */
+        /* Apilar las columnas */
         grid-template-columns: 1fr; 
         gap: 15px; 
     }
