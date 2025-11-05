@@ -1,9 +1,11 @@
 /* ---------------------------------
     1. Base y Tipografía
 --------------------------------- */
+* { box-sizing: border-box; }
+
 body {
-    font-family: 'Poppins', sans-serif; 
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     color: #333;
     margin: 0;
     padding: 20px;
@@ -11,16 +13,16 @@ body {
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    box-sizing: border-box; 
 }
 
+/* Contenedor general */
 .container {
-    max-width: 1200px; 
+    max-width: 1200px;
     width: 100%;
     background-color: #fff;
     padding: 30px;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     text-align: center;
     margin-top: 20px;
 }
@@ -30,10 +32,7 @@ h1 {
     font-weight: 700;
 }
 
-p {
-    margin-bottom: 25px;
-    color: #666;
-}
+p { margin-bottom: 25px; color: #666; }
 
 /* ---------------------------------
     2. Área de Texto con Sombra Mejorada
@@ -48,14 +47,14 @@ textarea {
     border-radius: 12px;
     font-size: 16px;
     resize: vertical;
-    transition: all 0.3s ease; 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); 
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
 textarea:focus {
-    border-color: #8A2BE2; 
+    border-color: #8A2BE2;
     outline: none;
-    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.2); 
+    box-shadow: 0 6px 20px rgba(138,43,226,0.2);
 }
 
 /* ---------------------------------
@@ -66,17 +65,17 @@ button {
     color: white;
     padding: 14px 30px;
     border: none;
-    border-radius: 30px; 
+    border-radius: 30px;
     cursor: pointer;
     font-size: 17px;
     font-weight: 600;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(138, 43, 226, 0.3);
+    box-shadow: 0 4px 10px rgba(138,43,226,0.3);
 }
 
 button:hover {
     background-color: #721CC6;
-    box-shadow: 0 6px 15px rgba(138, 43, 226, 0.4);
+    box-shadow: 0 6px 15px rgba(138,43,226,0.4);
 }
 
 button:disabled {
@@ -86,27 +85,25 @@ button:disabled {
     opacity: 0.7;
 }
 
+/* Botón copiar pequeño */
 .copy-small {
     background-color: #4CAF50;
     padding: 8px 18px;
     font-size: 14px;
     border-radius: 20px;
-    box-shadow: 0 2px 5px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 2px 5px rgba(76,175,80,0.3);
     margin-top: 15px;
 }
 
-.copy-small:hover {
-    background-color: #43A047;
-}
+.copy-small:hover { background-color: #43A047; }
 
 #copy-all-button {
-    background-color: #FF4500; 
+    background-color: #FF4500;
     margin-top: 15px;
 }
 
-#copy-all-button:hover {
-    background-color: #D32F2F;
-}
+#copy-all-button:hover { background-color: #D32F2F; }
+
 
 /* ---------------------------------
     4. Animación de Carga
@@ -130,11 +127,8 @@ button:disabled {
     margin-right: 10px;
     animation: spin 1s linear infinite;
 }
+@keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
 
 /* ---------------------------------
     5. Contenedor de Resultados (Cards)
@@ -143,12 +137,10 @@ button:disabled {
     margin-top: 40px;
     padding: 30px;
     border-radius: 12px;
-    background-color: #ffffff; 
+    background-color: #ffffff;
     border: 1px solid #e0e4e8;
     text-align: left;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%;
 }
 
 .results-container h2 {
@@ -158,20 +150,24 @@ button:disabled {
     margin-bottom: 25px;
 }
 
-/* ✅ 3 columnas alineadas y centradas con alturas iguales */
+/* ✅ Siempre tres columnas alineadas en una fila */
 .hashtag-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(300px, 1fr));
+    display: flex;
     justify-content: center;
     align-items: stretch;
     gap: 25px;
+    flex-wrap: nowrap;        /* ❗ impide que bajen de fila */
+    overflow-x: auto;         /* permite scroll si el contenedor no cabe */
     width: 100%;
-    max-width: 1100px;
-    margin-bottom: 30px;
+    padding: 10px 0;
 }
 
+/* Card */
 .hashtag-column {
-    background-color: #f9fbfd; 
+    background-color: #f9fbfd;
+    flex: 1 1 30%;
+    min-width: 300px;         /* ancho mínimo por card */
+    max-width: 350px;
     padding: 20px;
     border-radius: 10px;
     border: 1px solid #e9eef2;
@@ -179,37 +175,37 @@ button:disabled {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
 }
 
 .hashtag-column:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
 
 .hashtag-column h3 {
-    color: #444;
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.2em;
+    margin: 0 0 12px 0;
+    font-size: 1.1rem;
     font-weight: 600;
 }
 
-.hashtag-column:nth-child(1) h3 { color: #FF4500; } 
-.hashtag-column:nth-child(2) h3 { color: #1E90FF; } 
-.hashtag-column:nth-child(3) h3 { color: #32CD32; } 
+/* colores */
+.hashtag-column:nth-child(1) h3 { color: #FF4500; }
+.hashtag-column:nth-child(2) h3 { color: #1E90FF; }
+.hashtag-column:nth-child(3) h3 { color: #32CD32; }
 
+/* contenido */
 .hashtag-output {
     flex: 1;
     width: 100%;
     text-align: left;
     white-space: pre-wrap;
     font-size: 14px;
-    line-height: 1.8; 
+    line-height: 1.8;
     color: #222;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 /* ---------------------------------
@@ -217,7 +213,7 @@ button:disabled {
 --------------------------------- */
 hr {
     border: 0;
-    border-top: 1px solid #f0f4f8; 
+    border-top: 1px solid #f0f4f8;
     margin: 30px 0;
 }
 
@@ -228,9 +224,7 @@ footer {
     color: #999;
 }
 
-.legal-footer a {
-    font-size: 14px;
-}
+.legal-footer a { font-size: 14px; }
 
 /* ---------------------------------
     7. Contenido Estático (AdSense Fix)
@@ -238,7 +232,7 @@ footer {
 .adsense-content {
     max-width: 900px;
     width: 90%;
-    margin: 40px auto; 
+    margin: 40px auto;
     padding: 20px 0;
     text-align: left;
 }
@@ -256,31 +250,20 @@ footer {
     margin-bottom: 20px;
 }
 
-.adsense-content li {
-    margin-bottom: 10px;
-    line-height: 1.4;
-}
-
-.adsense-content p {
-    color: #333;
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
+.adsense-content li { margin-bottom: 10px; line-height: 1.4; }
+.adsense-content p { color: #333; line-height: 1.6; margin-bottom: 15px; }
 
 /* ---------------------------------
     8. Media Queries
 --------------------------------- */
-@media (max-width: 850px) { 
+@media (max-width: 850px) {
     .hashtag-grid {
-        grid-template-columns: 1fr;
-        max-width: 600px;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: visible;
     }
-
-    .container {
-        padding: 20px;
+    .hashtag-column {
+        max-width: 90%;
     }
-
-    .adsense-content {
-        padding: 20px;
-    }
+    .container { padding: 20px; }
 }
