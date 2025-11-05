@@ -1,66 +1,106 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Hashtags IA para Reels 🚀</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6756957885011779"
-     crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Hashtags IA para Reels 🚀</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6756957885011779"
+     crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>Generador de Hashtags IA para Reels ✨</h1>
-        <p>Introduce la descripción de tu Reel, y la IA generará una lista optimizada de 30 hashtags clasificados por Popularidad (Populares, Medios y Nicho).</p>
+    <div class="container">
+        <h1>Generador de Hashtags IA para Reels ✨</h1>
+        <p>Introduce la descripción de tu Reel, y la IA generará una lista optimizada de 30 hashtags clasificados por Popularidad (Populares, Medios y Nicho).</p>
 
-        <textarea id="reel-description" placeholder="Describe tu Reel (ej: Receta de tacos veganos para principiantes)"></textarea>
+        <textarea id="reel-description" placeholder="Describe tu Reel (ej: Receta de tacos veganos para principiantes)"></textarea>
 
-        <button id="generate-button" onclick="generateHashtags()">
-            Generar Hashtags
-        </button>
+        <button id="generate-button" onclick="generateHashtags()">
+            Generar Hashtags
+        </button>
 
-        <div id="loading" class="loading" style="display:none;">
-            Cargando... La IA está pensando... 🧠
+        <div id="loading" class="loading" style="display:none;">
+            Cargando... La IA está pensando... 🧠
+        </div>
+
+        <div id="results" class="results-container" style="display:none;">
+            <h2>✨ Hashtags Optimizados por IA (30 en total)</h2>
+            
+            <div class="hashtag-grid">
+                
+                <div class="hashtag-column">
+                    <h3>📈 Populares</h3>
+                    <div id="popular-output" class="hashtag-output"></div>
+                    <button onclick="copyCategory('popular-output')" class="copy-small">Copiar</button>
+                </div>
+
+                <div class="hashtag-column">
+                    <h3>📊 Medios</h3>
+                    <div id="medium-output" class="hashtag-output"></div>
+                    <button onclick="copyCategory('medium-output')" class="copy-small">Copiar</button>
+                </div>
+
+                <div class="hashtag-column">
+                    <h3>🔬 Nicho</h3>
+                    <div id="niche-output" class="hashtag-output"></div>
+                    <button onclick="copyCategory('niche-output')" class="copy-small">Copiar</button>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <button id="copy-all-button" onclick="copyAllHashtags()">
+                Copiar los 30 Hashtags
+            </button>
+        </div>
+    </div>
+
+    <section id="explicacion-adsense" class="adsense-content">
+        <h2>Estrategia Aprobada por la IA: Despega en Instagram y TikTok</h2>
+        
+        <p>
+            <strong>¿Cansado de que tus Reels no tengan el alcance que merecen?</strong> El secreto de la visibilidad en redes sociales no está solo en el video, sino en el lenguaje secreto que utiliza el algoritmo: los hashtags. Si no usas la combinación adecuada, tu contenido se pierde en la inmensidad.
+        </p>
+
+        <h3>¿Cómo funciona nuestro Generador de Hashtags IA?</h3>
+        <p>
+            Esta herramienta ha sido diseñada para acabar con la frustración de buscar hashtags. Funciona con Inteligencia Artificial avanzada (API de OpenAI) que analiza el contexto de tu descripción (ej. "Receta de tacos veganos...") y genera una lista optimizada de **30 hashtags clasificados**. Este método está probado para aumentar las posibilidades de que tu contenido sea descubierto por la audiencia correcta.
+        </p>
+
+        <h3>La Estrategia de los 3 Niveles (Clave para un Crecimiento Sostenible)</h3>
+        <p>
+            Para un crecimiento sostenible, debes usar una mezcla estratégica que equilibre la visibilidad masiva con la posibilidad real de aparecer en los resultados de búsqueda:
+        </p>
+        
+        <ul>
+            <li>
+                <strong>Populares (Gran Alcance):</strong> Estos hashtags tienen millones de publicaciones. Te dan visibilidad a corto plazo, pero la competencia es feroz. Úsalos para el alcance masivo.
+            </li>
+            <li>
+                <strong>Medios (Columna Vertebral):</strong> Con una competencia moderada, son cruciales. Aquí es donde es más probable que tu Reel se posicione a medio plazo.
+            </li>
+            <li>
+                <strong>Nicho (Alta Conversión):</strong> Son muy específicos de tu contenido (ej., #TacosDeLentejas). Atraen a una audiencia hiper-interesada y tienen la mejor tasa de conversión a seguidores.
+            </li>
+        </ul>
+
+        <p>
+            **¡Deja de adivinar y empieza a crecer!** Usa nuestra herramienta gratuita para obtener la combinación perfecta en segundos.
+        </p>
+    </section>
+        <script src="script.js"></script>
+
+    <footer class="legal-footer">
+        <div style="text-align: center; padding: 20px; margin-top: 50px; border-top: 1px solid #e0e0e0;">
+            <p>&copy; 2025 Generador de Hashtags IA</p>
+            <p>
+                <a href="privacidad.html" style="margin: 0 10px; color: #8A2BE2; text-decoration: none;">Política de Privacidad</a> |
+                <a href="terminos.html" style="margin: 0 10px; color: #8A2BE2; text-decoration: none;">Términos y Condiciones</a> |
+                <a href="contacto.html" style="margin: 0 10px; color: #8A2BE2; text-decoration: none;">Contacto</a>
+            </p>
         </div>
-
-        <div id="results" class="results-container" style="display:none;">
-            <h2>✨ Hashtags Optimizados por IA (30 en total)</h2>
-            
-            <div class="hashtag-grid">
-                
-                <div class="hashtag-column">
-                    <h3>📈 Populares</h3>
-                    <div id="popular-output" class="hashtag-output"></div>
-                    <button onclick="copyCategory('popular-output')" class="copy-small">Copiar</button>
-                </div>
-
-                <div class="hashtag-column">
-                    <h3>📊 Medios</h3>
-                    <div id="medium-output" class="hashtag-output"></div>
-                    <button onclick="copyCategory('medium-output')" class="copy-small">Copiar</button>
-                </div>
-
-                <div class="hashtag-column">
-                    <h3>🔬 Nicho</h3>
-                    <div id="niche-output" class="hashtag-output"></div>
-                    <button onclick="copyCategory('niche-output')" class="copy-small">Copiar</button>
-                </div>
-            </div>
-            
-            <hr>
-            
-            <button id="copy-all-button" onclick="copyAllHashtags()">
-                Copiar los 30 Hashtags
-            </button>
-        </div>
-    </div>
-
-    <footer>
-        <p>Herramienta gratuita y de Riesgo Cero, potenciada por Open AI y Vercel.</p>
     </footer>
-
-    <script src="script.js"></script>
-</body>
+    </body>
 </html>
