@@ -159,14 +159,15 @@ button:disabled {
     margin-bottom: 25px;
 }
 
+/* ✅ NUEVA CONFIGURACIÓN DE GRID FLUIDA Y ALINEADA */
 .hashtag-grid {
     display: grid;
-    /* QUITAMOS grid-template-columns: repeat(3, 1fr); de aquí - SE MUEVE AL MEDIA QUERY */
-    gap: 20px; 
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
     margin-bottom: 30px;
+    align-items: stretch;
 }
 
-/* CORRECCIÓN DE ALINEACIÓN */
 .hashtag-column {
     background-color: #f9fbfd; 
     padding: 20px;
@@ -174,7 +175,6 @@ button:disabled {
     border: 1px solid #e9eef2;
     display: flex;
     flex-direction: column;
-    /* Centrado para alinear el botón correctamente */
     align-items: center; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     text-align: center;
@@ -193,7 +193,6 @@ button:disabled {
 .hashtag-column:nth-child(1) h3 { color: #FF4500; } 
 .hashtag-column:nth-child(2) h3 { color: #1E90FF; } 
 .hashtag-column:nth-child(3) h3 { color: #32CD32; } 
-
 
 .hashtag-output {
     min-height: 150px; 
@@ -226,12 +225,10 @@ footer {
     font-size: 14px;
 }
 
-
 /* ---------------------------------
     7. Contenido Estático (AdSense Fix)
 --------------------------------- */
 .adsense-content {
-    /* Ajuste de ancho para el contenido de valor */
     max-width: 900px;
     width: 90%;
     margin: 40px auto; 
@@ -263,27 +260,10 @@ footer {
     margin-bottom: 15px;
 }
 
-
 /* ---------------------------------
-    8. Media Queries - SOLUCIÓN DEFINITIVA A LAS COLUMNAS
+    8. Media Queries (solo ajustes menores)
 --------------------------------- */
-
-/* Regla para pantallas grandes (Desktop/Tablet Ancha - más de 650px): 3 columnas */
-@media (min-width: 851px) {
-    .hashtag-grid {
-        /* Forzamos 3 columnas */
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
-}
-
-/* Regla para pantallas pequeñas (Móviles - 650px o menos): 1 columna */
 @media (max-width: 850px) { 
-    .hashtag-grid {
-        /* Apilar las columnas */
-        grid-template-columns: 1fr; 
-        gap: 15px; 
-    }
     .container {
         padding: 20px;
     }
