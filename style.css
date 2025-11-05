@@ -269,7 +269,7 @@ footer {
 --------------------------------- */
 
 /* Regla para pantallas grandes (Desktop/Tablet Ancha - más de 650px): 3 columnas */
-@media (min-width: 651px) {
+@media (min-width: 851px) {
     .hashtag-grid {
         /* Forzamos 3 columnas */
         grid-template-columns: repeat(3, 1fr);
@@ -278,7 +278,7 @@ footer {
 }
 
 /* Regla para pantallas pequeñas (Móviles - 650px o menos): 1 columna */
-@media (max-width: 650px) { 
+@media (max-width: 850px) { 
     .hashtag-grid {
         /* Apilar las columnas */
         grid-template-columns: 1fr; 
